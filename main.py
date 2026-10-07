@@ -85,3 +85,4 @@ elif osz_ossz > te_ossz:
     print("Vesztettél!")
     te_osz_tet = 0
 
+print(te_penzed)
