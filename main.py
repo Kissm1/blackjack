@@ -70,6 +70,7 @@ while osz_ossz < 17:
     osz_ossz = 0
     for i in range(len(osz_ol)):
         osz_ossz += osz_ol[i].ertek
+print(f"játékos: {te_ossz}")
 print(f"dealer:{osz_ossz}")
 
 if te_ossz > 21:
