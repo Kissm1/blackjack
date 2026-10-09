@@ -32,7 +32,7 @@ while uj_jatek_folytatas == "igen":
             try:
                 te_tet = int(input("add meg a tétet! "))
             except ValueError:
-                print(f"a téted: {1000 - te_penzed}")
+                print(f"a téted: {te_osz_tet}")
                 break
 
     osz_ol = []
