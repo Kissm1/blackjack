@@ -1,7 +1,7 @@
 import random
 
 chip_ertekek = [10, 25, 50, 100, 200, 500, 1000]
-te_penzed = 1000
+visszaallitos_penz = 1000
 
 ertekek = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10,10,10,10]
 fel_huzo= [0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0, 0,0,0]
@@ -15,8 +15,22 @@ class Kartya():
             if ertek == ertekek[i]:
                 ful_huzo[i] += 1
                 break
-uj_jatek_folytatas = input("új játékot szeretnél kezdeni? ")            
-while uj_jatek_folytatas == "igen":            
+
+uj_jatek = input("új játékot szeretnél kezdeni? ")
+    
+if uj_jatek == "igen":
+    with open ('mentes.txt', "w", encoding="utf-8") as visszaallitas:
+        visszaallitas.write(str(visszaallitos_penz))
+    with open('mentes.txt', "r"  , encoding="utf-8") as mentett:
+        te_penzed = int(mentett.read().strip())
+    folytatas = "igen"
+    
+else:        
+    with open('mentes.txt', "r"  , encoding="utf-8") as mentett:
+        te_penzed = int(mentett.read().strip())
+    folytatas = "igen"
+          
+while folytatas == "igen":            
 
     print(f"Az összes pénzed: {te_penzed}")
     te_tet = int(input("add meg a tétet! "))
@@ -87,6 +101,17 @@ while uj_jatek_folytatas == "igen":
     elif osz_ossz > te_ossz:
         print("Vesztettél!")
         te_osz_tet = 0
-    uj_jatek_folytatas = input("Szeretnéd folytatni? ")
+        
+    if te_penzed <= 0:
+        break
 
+    folytatas = input("Szeretnéd folytatni? ")
+    
 print(F"Ennyi pénzel végezted a játszmát: ", te_penzed)
+
+if te_penzed > 0:
+    with open ('mentes.txt', "w", encoding="utf-8") as mentes:
+        mentes.write(str(te_penzed))
+else:
+    with open ('mentes.txt', "w", encoding="utf-8") as visszaallitas:
+            visszaallitas.write(str(visszaallitos_penz))
