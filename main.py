@@ -1,6 +1,6 @@
 import random
 
-chip_ertekek = [10, 25, 50, 100, 200, 500]
+chip_ertekek = [10, 25, 50, 100, 200, 500, 1000]
 te_penzed = 1000
 
 ertekek = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10,10,10,10]
