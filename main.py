@@ -89,4 +89,4 @@ while uj_jatek_folytatas == "igen":
         te_osz_tet = 0
     uj_jatek_folytatas = input("Szeretnéd folytatni? ")
 
-print(te_penzed)
+print(f"Ennyi pénzel végezted a játszát: "te_penzed)
