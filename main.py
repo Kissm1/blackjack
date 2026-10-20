@@ -3,6 +3,7 @@ import pygame
 import math
 import time
 import os
+import sys
 
 pygame.init()
 
@@ -12,12 +13,17 @@ te_penzed = 1000
 visszaallitos_penz = 1000
 
 WIDTH, HEIGHT = (580, 800)
-print("Aktuális mentésút:", os.path.abspath("mentes.txt"))
+if getattr(sys, "frozen", False):
+  eleresi_ut = os.path.dirname(sys.executable)  # Az exe mappája
+else:
+  eleresi_ut = os.path.dirname(os.path.abspath(__file__))  # A script mappája
+
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 logos = ["♠","♥","♦","♣"]
 ertek_huzas_nezo = {}
-hatter_foto = r"C:\Users\szabo\Downloads\hatter.png"
+hatter_foto = os.path.join(eleresi_ut, "hatter.png")
+mentes_fajl = os.path.join(eleresi_ut, "mentes.txt")
 white = (255,255,255)
 green = (20,50,10)
 black = (0,0,0)
@@ -39,7 +45,7 @@ fel_huzo= [0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0, 0,0,0]
 te_osz_tet = 0
 fogadas_elott = te_penzed
 
-with open(r"C:\python\mentes.txt","r", encoding="utf-8") as mentett:
+with open(mentes_fajl,"r", encoding="utf-8") as mentett:
     te_penzed = int(mentett.read().strip())
 
 class Kartya():
@@ -415,7 +421,7 @@ while run:
 
 pygame.quit()
 
-with open (r"C:\python\mentes.txt", "w", encoding="utf-8") as mentes:
+with open (mentes_fajl, "w", encoding="utf-8") as mentes:
     if te_penzed > 0:
         mentes.write(str(te_penzed))
     else:
