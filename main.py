@@ -16,8 +16,7 @@ print("Aktuális mentésút:", os.path.abspath("mentes.txt"))
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 logos = ["♠","♥","♦","♣"]
-ertek_huzas_nezo = {}
-hatter_foto = r"C:\Users\szabo\Downloads\hatter.png"
+
 white = (255,255,255)
 green = (20,50,10)
 black = (0,0,0)
@@ -26,51 +25,29 @@ gold = (212, 175, 55)
 light_gold = (232, 195, 75)
 red = (255,0,0)
 
-kartya_kep = pygame.image.load(hatter_foto).convert_alpha()
-
 jelenlegi_allapot = 1
 
-jTC = {10: 0, 25: 0, 50: 0, 100: 0, 200: 0, 500: 0, 1000: 0}
-chip_ertekek = [10, 25, 50, 100, 200, 500, 1000]
-
-ertekek = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10,10,10,10]
-fel_huzo= [0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0, 0,0,0]
-
-te_osz_tet = 0
-fogadas_elott = te_penzed
-
-with open(r"C:\python\mentes.txt","r", encoding="utf-8") as mentett:
+with open('mentes.txt', "r"  , encoding="utf-8") as mentett:
     te_penzed = int(mentett.read().strip())
 
 class Kartya():
-    def __init__(self, ertek, lathato):
+    def __init__(self, ertek,lathato):
         self.ertek = ertek
         self.lathato = lathato
-        self.mennyiseg = 0
-        if ertek not in ertek_huzas_nezo:
-            ertek_huzas_nezo[ertek] = 0
-
-        # Assign symbol sequentially (0 -> ♠, 1 -> ♥, 2 -> ♦, 3 -> ♣)
-        suit_index = ertek_huzas_nezo[ertek] % len(logos)
-        self.szimbolum = logos[suit_index]
-
-        # Increment count for the next time this value is drawn
-        ertek_huzas_nezo[ertek] += 1
-    
+    def mennyiseg_donto(self):
+        for i in range(len(ertekek)):
+            if self.ertek == ertekek[i]:
+                fel_huzo[i] += 1
+                break
 def draw_text(text, color, x, y, size):
     font = pygame.font.SysFont(None, size)
     text_surface = font.render(text, True, color)
     screen.blit(text_surface, (x, y))
 
-def draw_symbols(text,color,x,y,size):
-    font = pygame.font.SysFont("segoeuisymbol", size)
-    text_surface = font.render(text, True, color)
-    screen.blit(text_surface, (x, y))
-
-def doboz_draw(text):
+def doboz_draw():
     pygame.draw.rect(screen, black, (85,0,410,105))
     pygame.draw.rect(screen, green, (90,0,400,100))
-    draw_text(text, white,115,35,40)
+    draw_text("Kérlek helyezz be chippet", white,115,35,40)
 
 def chip_terulet_draw():
     pygame.draw.rect(screen, brown, (0,580,580,200))
@@ -148,24 +125,18 @@ def fogadott_penzek():
 start_btn = pygame.Rect(WIDTH // 2 - 100, 520,200,50)
 
 def kartya_draw(kartya, x, y):
-    kartya_szelesseg = 70
-    kartya_magassag = 100
-    kartya_negyszög = pygame.Rect(x, y, kartya_szelesseg, kartya_magassag)
+  kartya_szelesseg = 70
+  kartya_magassag = 100
+  kartya_negyszög = pygame.Rect(x, y, kartya_szelesseg, kartya_magassag)
 
-    logo = kartya.szimbolum
-            
-    if kartya.lathato:
-        pygame.draw.rect(screen, (255, 255, 255), kartya_negyszög, border_radius=8)
-        pygame.draw.rect(screen, (0, 0, 0), kartya_negyszög, 2, border_radius=8)
+  if kartya.lathato:
+    pygame.draw.rect(screen, (255, 255, 255), kartya_negyszög, border_radius=8)
+    pygame.draw.rect(screen, (0, 0, 0), kartya_negyszög, 2, border_radius=8)
 
-        draw_symbols(str(logo), (0, 0, 0), x + 3, y + 3, 20)
-        draw_symbols(str(logo), (0, 0, 0), x + 3, y + 70, 20)
-        draw_symbols(str(logo), (0, 0, 0), x + 53, y + 3, 20)
-        draw_symbols(str(logo), (0, 0, 0), x + 53, y + 70, 20)
-        draw_text(str(kartya.ertek), (0, 0, 0), x + 22, y + 35, 40)
-    else:
-        pygame.draw.rect(screen, (30, 30, 150), kartya_negyszög, border_radius=8)
-        pygame.draw.rect(screen, (255, 255, 255), kartya_negyszög, 2, border_radius=8)
+    draw_text(str(kartya.ertek), (0, 0, 0), x + 22, y + 35, 40)
+  else:
+    pygame.draw.rect(screen, (30, 30, 150), kartya_negyszög, border_radius=8)
+    pygame.draw.rect(screen, (255, 255, 255), kartya_negyszög, 2, border_radius=8)
 
 def kartya_jelenito(te_ol, osz_ol):
   oszto_start_x = 200 / len(osz_ol) + 100
@@ -218,13 +189,8 @@ def gomb_funkciok(eger_poz):
     return None
 
 def board_draw():
-    screen.blit(kartya_kep, (0, 0))
-    if jelenlegi_allapot == 1:
-        doboz_draw("Kérlek helyezz be chippet")
-    elif jelenlegi_allapot == 2:
-        doboz_draw("Húzz fel kártyát!")
-    elif jelenlegi_allapot == 3:
-        doboz_draw("Az osztó húz kártyákat")
+    screen.fill(green)
+    doboz_draw()
     chip_terulet_draw()
     bank_draw()
     
@@ -232,14 +198,11 @@ def oKSZ():
     te_ossz = 0
     for i in range(len(te_ol)):
         te_ossz += te_ol[i].ertek
-
     draw_text(f"Össz: {te_ossz}", white, 450, 590, 45)
     osz_ossz = 0
     for i in range(len(osz_ol)):
         if osz_ol[i].lathato == True:
             osz_ossz += osz_ol[i].ertek
-    pygame.draw.rect(screen,black,(438,188,144,59), border_radius=8)
-    pygame.draw.rect(screen,brown,(440,190,140,55), border_radius=8)
     draw_text(f"Össz: {osz_ossz}", white, 450, 200, 45)
 
     return te_ossz, osz_ossz
@@ -267,8 +230,6 @@ def allapot_harom_draw():
     return te_ossz, osz_ossz
 
 def allapot_negy_draw(donto):
-    pygame.draw.rect(screen,black,(WIDTH // 2 - 275, HEIGHT // 2 - 65, 550, 170), border_radius=12)
-    pygame.draw.rect(screen,brown,(WIDTH // 2 - 270, HEIGHT // 2 - 60, 540, 160), border_radius=12)
     if donto == 2:
         draw_text("Nyertél!", white, WIDTH //2 - 85, HEIGHT // 2 - 50, 50)
     elif donto == 1:
@@ -276,29 +237,34 @@ def allapot_negy_draw(donto):
     else:
         draw_text("Döntetlen!", white, WIDTH //2 - 93, HEIGHT // 2 - 50, 50)
     if te_penzed > 0:
-        draw_text("Kattints az újra játszáshoz!", white, WIDTH //2 - 230, HEIGHT // 2, 50)
+        draw_text("Kattints az újra játszáshoz!", white, WIDTH //2 - 250, HEIGHT // 2, 50)
     else:
-        draw_text("Kifogytál pénzből!", white, WIDTH //2 - 150, HEIGHT // 2, 50)
-        draw_text("Kattints a kilépéshez!!", white, WIDTH //2 - 180, HEIGHT // 2 + 50, 50)
+        draw_text("Kifogytál pénzből!", white, WIDTH //2 - 130, HEIGHT // 2, 50)
+        draw_text("Kattints a kilépéshez!!", white, WIDTH //2 - 150, HEIGHT // 2 + 50, 50)
+
+def reset():
+    pass
+
+jTC = {10: 0, 25: 0, 50: 0, 100: 0, 200: 0, 500: 0, 1000: 0}
+chip_ertekek = [10, 25, 50, 100, 200, 500, 1000]
+
+ertekek = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10,10,10,10]
+fel_huzo= [0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0, 0,0,0]
+
+te_osz_tet = 0
+fogadas_elott = te_penzed
+
 
 helyzet = 0
 te_ossz = 0
 gombok = ["Húz", "Elég"]
 osz_ol = []
-kartya_1 = Kartya(random.choice(ertekek),True)
-osz_ol.append(kartya_1)
-
-kartya_1 = Kartya(random.choice(ertekek),False)
-osz_ol.append(kartya_1) 
-
+osz_ol.append(Kartya(random.choice(ertekek),True))
+osz_ol.append(Kartya(random.choice(ertekek),False)) 
 osz_ossz = 0
 te_ol = []
-kartya_1 = Kartya(random.choice(ertekek),True)
-te_ol.append(kartya_1)
-
-kartya_1 = Kartya(random.choice(ertekek),True)
-te_ol.append(kartya_1)
-
+te_ol.append(Kartya(random.choice(ertekek),True))
+te_ol.append(Kartya(random.choice(ertekek),True))
 run = True
 oszto_ido = 0
 while run:
@@ -322,11 +288,7 @@ while run:
                     lG = gomb_funkciok(event.pos)
                     if lG is not None:
                         if lG == "Húz":
-                            kartya_1 = Kartya(random.choice(ertekek),True)
-                            while fel_huzo[kartya_1.ertek] > 4:
-                                kartya_1 = Kartya(random.choice(ertekek),True)
-                            te_ol.append(kartya_1)
-                            
+                            te_ol.append(Kartya(random.choice(ertekek),True))
                             te_ossz = 0
                         if lG == "Elég":
                             jelenlegi_allapot = 3
@@ -335,24 +297,16 @@ while run:
                     pass
                 elif jelenlegi_allapot == 4:
                     if te_penzed > 0:
-                        ertek_huzas_nezo.clear()
                         te_osz_tet = 0
                         helyzet = 0
                         te_ossz = 0
                         osz_ol = []
-                        kartya_1 = Kartya(random.choice(ertekek),True)
-                        osz_ol.append(kartya_1)
-                        
-                        kartya_1 = Kartya(random.choice(ertekek),False)
-                        osz_ol.append(kartya_1) 
-                        
+                        osz_ol.append(Kartya(random.choice(ertekek),True))
+                        osz_ol.append(Kartya(random.choice(ertekek),False)) 
                         osz_ossz = 0
                         te_ol = []
-                        kartya_1 = Kartya(random.choice(ertekek),True)
-                        te_ol.append(kartya_1)
-                        
-                        kartya_1 = Kartya(random.choice(ertekek),True)
-                        te_ol.append(kartya_1)
+                        te_ol.append(Kartya(random.choice(ertekek),True))
+                        te_ol.append(Kartya(random.choice(ertekek),True))
                         jTC = {10: 0, 25: 0, 50: 0, 100: 0, 200: 0, 500: 0, 1000: 0}
                         jelenlegi_allapot = 1
                     else:
@@ -378,10 +332,7 @@ while run:
             osz_ol[i].lathato = True
         if 17 > osz_ossz:
             if pygame.time.get_ticks() - oszto_ido >= 1000:
-                kartya_1 = Kartya(random.choice(ertekek),True)
-                while fel_huzo[kartya_1.ertek] > 4:
-                    kartya_1 = Kartya(random.choice(ertekek),True)
-                osz_ol.append(kartya_1)
+                osz_ol.append(Kartya(random.choice(ertekek),True))
                 oszto_ido = pygame.time.get_ticks()
         else:
             if pygame.time.get_ticks() - oszto_ido >= 1000:
@@ -409,7 +360,7 @@ while run:
 
 pygame.quit()
 
-with open (r"C:\python\mentes.txt", "w", encoding="utf-8") as mentes:
+with open ('mentes.txt', "w", encoding="utf-8") as mentes:
     if te_penzed > 0:
         mentes.write(str(te_penzed))
     else:
