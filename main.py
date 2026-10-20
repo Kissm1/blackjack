@@ -13,6 +13,7 @@ te_penzed = 1000
 visszaallitos_penz = 1000
 
 WIDTH, HEIGHT = (580, 800)
+# A háttér és mentés.txt fájlok helyének meghatározása script és .exe esetében
 if getattr(sys, "frozen", False):
   eleresi_ut = os.path.dirname(sys.executable)  # Az exe mappája
 else:
@@ -45,6 +46,7 @@ fel_huzo= [0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0, 0, 0,0,0]
 te_osz_tet = 0
 fogadas_elott = te_penzed
 
+# Meglévő pénz beolvasása mentes.txt-ből
 with open(mentes_fajl,"r", encoding="utf-8") as mentett:
     te_penzed = int(mentett.read().strip())
 
@@ -60,7 +62,7 @@ class Kartya():
         suit_index = ertek_huzas_nezo[ertek] % len(logos)
         self.szimbolum = logos[suit_index]
 
-        # Increment count for the next time this value is drawn
+        # Mennyiség növelő minden alkalommal amikor fel van húzva
         ertek_huzas_nezo[ertek] += 1
     
 def draw_text(text, color, x, y, size):
@@ -86,7 +88,8 @@ def bank_draw():
     pygame.draw.rect(screen,light_gold, (WIDTH // 2 -120, 760, 240, 35))
     draw_text(f"Egyenleged: {te_penzed}", white,WIDTH // 2 - 110,765,35)
 
-def melyik_chippek(fogadas_elott):
+# A dinamikus pénz logikája
+def melyik_chippek(fogadas_elott): 
     if fogadas_elott < 2000:
         return chip_ertekek[0:4] 
     elif fogadas_elott < 5000:
@@ -96,6 +99,7 @@ def melyik_chippek(fogadas_elott):
     else:
         return chip_ertekek[3:7] 
 
+# A chippek megrajzolása
 def chip_center(x):
   center_x = 60 * (x - 1) + 60 * x + 20 * x
   center_y = 680
@@ -153,6 +157,7 @@ def fogadott_penzek():
 
 start_btn = pygame.Rect(WIDTH // 2 - 100, 520,200,50)
 
+# A kártyák megrajzolása
 def kartya_draw(kartya, x, y):
     kartya_szelesseg = 70
     kartya_magassag = 100
@@ -202,6 +207,7 @@ def kartya_jelenito(te_ol, osz_ol):
     else:
         kartya_draw(kartya, te_start_x + (index * 85), te_start_y)
 
+#gombok megrajzolása
 def gomb_center(x):
     center_x = (60 * (x - 1) + 60 * x + 20 * x) * 2
     center_y = 680
@@ -229,6 +235,7 @@ def gomb_funkciok(eger_poz):
 
     return None
 
+# Kép és állapotok megjelenítése
 def board_draw():
     screen.blit(kartya_kep, (0, 0))
     if jelenlegi_allapot == 1:
@@ -293,6 +300,7 @@ def allapot_negy_draw(donto):
         draw_text("Kifogytál pénzből!", white, WIDTH //2 - 150, HEIGHT // 2, 50)
         draw_text("Kattints a kilépéshez!!", white, WIDTH //2 - 180, HEIGHT // 2 + 50, 50)
 
+# Alaphelyzet kialakítása
 helyzet = 0
 te_ossz = 0
 gombok = ["Húz", "Elég"]
@@ -346,7 +354,7 @@ while run:
                 elif jelenlegi_allapot == 3:
                     pass
                 elif jelenlegi_allapot == 4:
-                    if te_penzed > 0:
+                    if te_penzed > 0: # Reset alapheéyzetre
                         ertek_huzas_nezo.clear()
                         te_osz_tet = 0
                         helyzet = 0
@@ -354,15 +362,12 @@ while run:
                         osz_ol = []
                         kartya_1 = Kartya(random.choice(ertekek),True)
                         osz_ol.append(kartya_1)
-                        
                         kartya_1 = Kartya(random.choice(ertekek),False)
                         osz_ol.append(kartya_1) 
-                        
                         osz_ossz = 0
                         te_ol = []
                         kartya_1 = Kartya(random.choice(ertekek),True)
                         te_ol.append(kartya_1)
-                        
                         kartya_1 = Kartya(random.choice(ertekek),True)
                         te_ol.append(kartya_1)
                         jTC = {10: 0, 25: 0, 50: 0, 100: 0, 200: 0, 500: 0, 1000: 0}
@@ -421,12 +426,9 @@ while run:
 
 pygame.quit()
 
+# Mentés
 with open (mentes_fajl, "w", encoding="utf-8") as mentes:
     if te_penzed > 0:
         mentes.write(str(te_penzed))
     else:
         mentes.write(str(visszaallitos_penz))
-
-#kartya_kep = pygame.image.load("kartya_hatlap.png").convert_alpha()
-#kartya_kep_meret = pygame.transform.scale(kartya_kep, (70, 100))
-#megjelenites: screen.blit(kartya_kep, (200, 150))
