@@ -58,7 +58,7 @@ class Kartya():
         if ertek not in ertek_huzas_nezo:
             ertek_huzas_nezo[ertek] = 0
 
-        # Assign symbol sequentially (0 -> ♠, 1 -> ♥, 2 -> ♦, 3 -> ♣)
+        # Szimbolum meghatározása
         suit_index = ertek_huzas_nezo[ertek] % len(logos)
         self.szimbolum = logos[suit_index]
 
